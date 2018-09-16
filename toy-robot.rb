@@ -3,11 +3,6 @@
 =begin
 The application is a simulation of a toy robot moving on a square tabletop,of dimensions 5 units x 5 units.  There are no other obstructions on the table surface.  The robot is free to roam around the surface of the table, but must be prevented from falling to destruction.  Any movement that would result in the robot falling from the table must be prevented, however further valid movement commands must still be allowed.
 
-Create an application that can read in commands of the following form:
-
- Input can be from a file, or from standard input, as the developer chooses.
-- Provide test data to exercise the application.
-
 Constraints
 -----------
 
@@ -179,7 +174,7 @@ class Robot
 
 	#Report Method announces the X,Y and F of the robot.
 	def report
-		puts "Robot is placed on board at position x:#{@xPosition}, y:#{@yPosition} and facing #{@facing}"
+		puts "#{@xPosition},#{@yPosition},#{@facing}"
 	end
 
 end
