@@ -9,7 +9,6 @@ LEFT
 RIGHT
 REPORT
 
-
 To start the program: *ruby init.rb*
 
 To run the unit tests: *rspec spec/toy-robot_spec.rb*
