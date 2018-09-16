@@ -119,14 +119,13 @@ class Robot
 
        	def initialize()
                 @directions = {"NORTH" => 0, "EAST" => 1, "SOUTH" => 2, "WEST" => 3}
+		@game = Game.new	
         end
 
 	#Set xPosition: setter guards against any move that would take the robot off the board
  	def xPosition=(x)
-                if x > 4
-                        @xPosition = 4
-                elsif x < 0
-                        @xPosition = 0
+                if x < 0 || x > 4 
+                	puts @game.errortext["out_of_bounds"] 
                 else
                         @xPosition = x
                 end
@@ -135,14 +134,12 @@ class Robot
 
 	#Set yPosition: setter guards against any move that would take the robot off the board
         def yPosition=(y)
-                if y > 4
-                        @yPosition = 4
-                elsif y < 0
-                        @yPosition = 0
+                if y < 0 || y > 4 
+                	puts @game.errortext["out_of_bounds"] 
                 else
                         @yPosition = y
                 end
-        end
+       end
 
 	#Place method: Puts the toy robot on the table in position X,Y and facing NORTH, SOUTH, EAST or WEST. 
         def place(x,y,f)
@@ -201,8 +198,9 @@ class Game
                         "placement" => "Please place robot with command in form \"PLACE x,y,facing\" eg PLACE 1,2,NORTH",
                         "placement_position" => "Please place robot with both x and y coordinates in range 0 to 4",
                         "placement_direction" => "Please place robot facing in one of NORTH, EAST, SOUTH or WEST directions",
-                        "invalid_command" => "Command not recognised.  Permissable commands are #{commands.inspect}"
-                        }
+                        "invalid_command" => "Command not recognised.  Permissable commands are #{commands.inspect}",
+                        "out_of_bounds" => "Sorry, that command would put the robot off the table. Command Ignored."
+			}
         end
 end
 
