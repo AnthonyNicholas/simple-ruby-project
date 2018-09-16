@@ -41,10 +41,31 @@ def main
         loop do
                 #read input
                 inputString = gets.chomp
-		#TODO
+		if is_valid_input(inputString, game)
+                        inputArray = get_input_array(inputString)
+                        puts "Valid input - let's go"
+                end
         end
 end
 
+
+
+# is_valid_input method
+def is_valid_input(inputString, game)
+	inputArray = get_input_array(inputString)
+        len = inputArray.length
+        if !(len == 1 or len == 4)
+		puts game.errortext["invalid_command"]
+                return false
+        elsif len == 1 and game.commands[1..4].include?(inputArray[0])
+                return true
+        elsif len == 4 and game.commands[0] == inputArray[0]
+		return is_valid_placement(inputString, game)
+        else
+                puts game.errortext["invalid_command"]
+                return false
+        end
+end
 
 #get_input_array method
 def get_input_array(inputString)
