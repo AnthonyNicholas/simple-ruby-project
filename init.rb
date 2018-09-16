@@ -16,6 +16,10 @@ Constraints
 require_relative('lib/game')
 
 game = Game.new
+
+puts "\nWelcome to the toy robot application.  First place the robot on the table (with a command in the form \"PLACE X,Y,Facing\" eg \"PLACE 2,2,NORTH\").  Then move the robot with the commands MOVE, RIGHT, LEFT or PLACE.  Retrieve the robots current location with the REPORT command."
+puts "\nEnter your command: "  
+
 game.run
 
 
