@@ -27,8 +27,14 @@ def main
         #Initial placement of robot on the board
         loop do
                 inputString = gets.chomp
-		#TODO
-
+ 		if is_valid_placement(inputString, game)
+                        inputArray = get_input_array(inputString)
+                        robot.xPosition = inputArray[1].to_i
+                        robot.yPosition = inputArray[2].to_i
+                        robot.facing = inputArray[3]
+                        robot.report
+                        break
+                end
        	end
 
         #Allow the robot to move in response to stdin commands
@@ -39,11 +45,70 @@ def main
         end
 end
 
+
+#get_input_array method
+def get_input_array(inputString)
+        if inputString.split(" ").length == 1
+                return [inputString]
+        elsif inputString.split(" ").length == 2
+                return [inputString.split(" ")[0]] + inputString.split(" ")[1].split(",")
+        else
+                return nil
+        end
+end
+
+# is_valid_placement method
+def is_valid_placement(input, game)
+        if input.split(" ").length != 2
+                puts game.errortext["placement"] 
+                return false
+        end 
+        inputArray = [input.split(" ")[0]] + input.split(" ")[1].split(",")
+        if (inputArray[0] != "PLACE" || inputArray.length != 4) 
+                puts game.errortext["placement"] 
+                return false
+        elsif !game.positions.include?(inputArray[1]) || !game.positions.include?(inputArray[2])  
+                puts game.errortext["placement_position"] 
+                return false
+        elsif !game.directions.include?(inputArray[3])
+                puts game.errortext["placement_direction"] 
+                return false
+        else
+                return true
+        end
+end
+
+
 #ROBOT CLASS: keeps track of whether robot is on the board & stores position & orientation of the robot
 
 class Robot
         attr_accessor :facing, :onBoard
         attr_reader :xPosition, :yPosition
+
+	#Set xPosition: setter guards against any move that would take the robot off the board
+ 	def xPosition=(x)
+                if x > 4
+                        @xPosition = 4
+                elsif x < 0
+                        @xPosition = 0
+                else
+                        @xPosition = x
+                end
+        end
+
+
+	#Set yPosition: setter guards against any move that would take the robot off the board
+        def yPosition=(y)
+                if y > 4
+                        @yPosition = 4
+                elsif y < 0
+                        @yPosition = 0
+                else
+                        @yPosition = y
+                end
+        end
+
+
 
 # METHOD: Place  will put the toy robot on the table in position X,Y and facing NORTH, SOUTH, EAST or WEST. The origin (0,0) can be considered to be the SOUTH WEST most corner.  The first valid command to the robot is a PLACE command, after that, any sequence of commands may be issued, in any order, including another PLACE command. The application should discard all commands in the sequence until a valid PLACE command has been executed.
 	def place
@@ -66,10 +131,30 @@ class Robot
 
 #METHOD: REPORT will announce the X,Y and F of the robot. This can be in any form, but standard output is sufficient.
 	def report
-		#TODO
+		puts "Robot is placed on board at position x:#{@xPosition}, y:#{@yPosition} and facing #{@facing}"
 	end
 
 end
+
+
+#Game Class:
+class Game
+        attr_reader :positions, :directions, :commands, :permitted_command_lengths, :errortext
+
+        def initialize()
+                @positions = ["0","1","2","3","4"]
+                @directions = ["NORTH", "EAST", "SOUTH", "WEST"]
+                @commands = ["PLACE", "MOVE", "LEFT", "RIGHT", "REPORT"]
+                @permitted_command_lengths = [1,2]
+                @errortext = {
+                        "placement" => "Please place robot with command in form \"PLACE x,y,facing\" eg PLACE 1,2,NORTH",
+                        "placement_position" => "Please place robot with both x and y coordinates in range 0 to 4",
+                        "placement_direction" => "Please place robot facing in one of NORTH, EAST, SOUTH or WEST directions",
+                        "invalid_command" => "Command not recognised.  Permissable commands are #{commands.inspect}"
+                        }
+        end
+end
+
 
 #Run main function
 main
