@@ -29,9 +29,7 @@ def main
                 inputString = gets.chomp
  		if is_valid_placement(inputString, game)
                         inputArray = get_input_array(inputString)
-                        robot.xPosition = inputArray[1].to_i
-                        robot.yPosition = inputArray[2].to_i
-                        robot.facing = inputArray[3]
+			robot.place(inputArray[1].to_i, inputArray[2].to_i, inputArray[3])
                         robot.report
                         break
                 end
@@ -129,12 +127,12 @@ class Robot
                 end
         end
 
-
-
-# METHOD: Place  will put the toy robot on the table in position X,Y and facing NORTH, SOUTH, EAST or WEST. The origin (0,0) can be considered to be the SOUTH WEST most corner.  The first valid command to the robot is a PLACE command, after that, any sequence of commands may be issued, in any order, including another PLACE command. The application should discard all commands in the sequence until a valid PLACE command has been executed.
-	def place
-		#TODO
-	end
+	#Place method: Puts the toy robot on the table in position X,Y and facing NORTH, SOUTH, EAST or WEST. 
+        def place(x,y,facing)
+                self.xPosition = x
+                self.yPosition = y
+                self.facing = facing
+        end
 
 #METHOD: MOVE will move the toy robot one unit forward in the direction it is currently facing. LEFT and RIGHT will rotate the robot 90 degrees in the specified direction without changing the position of the robot. REPORT will announce the X,Y and F of the robot. This can be in any form, but standard output is sufficient.A robot that is not on the table can choose the ignore the MOVE, LEFT, RIGHT and REPORT commands.
 	def move
@@ -158,7 +156,7 @@ class Robot
 end
 
 
-#Game Class:
+#GAME CLASS: stores basic constants & error messages associated with game 
 class Game
         attr_reader :positions, :directions, :commands, :permitted_command_lengths, :errortext
 
