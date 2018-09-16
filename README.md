@@ -3,11 +3,7 @@ Ruby project - a simulation of a toy robot moving on a square tabletop, of dimen
 
 The robot must first be placed and then moved using the following commands:
 
-PLACE X,Y,F
-MOVE
-LEFT
-RIGHT
-REPORT
+PLACE X,Y,F; MOVE; LEFT; RIGHT; REPORT
 
 To start the program: *ruby init.rb*
 
