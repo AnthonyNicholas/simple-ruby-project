@@ -6,13 +6,13 @@ class Robot
 
        	def initialize()
                 @directions = {"NORTH" => 0, "EAST" => 1, "SOUTH" => 2, "WEST" => 3}
-		@game = Game.new	
-        end
+		@onBoard = false 
+       end
 
 	#Set xPosition: setter guards against any move that would take the robot off the board
  	def xPosition=(x)
                 if x < 0 || x > 4 
-                	puts @game.errortext["out_of_bounds"] 
+                	puts "Sorry, that command would put the robot off the table. Command Ignored."
                 else
                         @xPosition = x
                 end
@@ -22,7 +22,7 @@ class Robot
 	#Set yPosition: setter guards against any move that would take the robot off the board
         def yPosition=(y)
                 if y < 0 || y > 4 
-                	puts @game.errortext["out_of_bounds"] 
+                	puts "Sorry, that command would put the robot off the table. Command Ignored."
                 else
                         @yPosition = y
                 end
@@ -32,7 +32,6 @@ class Robot
         def place(x,y,f)
                 self.xPosition = x
                 self.yPosition = y
-                puts f
 		@facing = f
         end
 

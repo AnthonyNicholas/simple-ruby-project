@@ -5,11 +5,13 @@ require_relative('./robot')
 
 class Game
         attr_reader :positions, :directions, :commands, :permitted_command_lengths, :errortext
+	attr_accessor :robot
+
 
         def initialize()
                 @positions = ["0","1","2","3","4"]
                 @directions = ["NORTH", "EAST", "SOUTH", "WEST"]
-                @commands = ["PLACE", "MOVE", "LEFT", "RIGHT", "REPORT"]
+                @commands = ["PLACE", "MOVE", "LEFT", "RIGHT", "REPORT", "QUIT"]
                 @permitted_command_lengths = [1,2]
                 @errortext = {
                         "placement" => "Please place robot with command in form \"PLACE x,y,facing\" eg PLACE 1,2,NORTH",
@@ -18,20 +20,20 @@ class Game
                         "invalid_command" => "Command not recognised.  Permissable commands are #{commands.inspect}",
                         "out_of_bounds" => "Sorry, that command would put the robot off the table. Command Ignored."
 			}
+		@robot = Robot.new
         end
 
 
 	def run
-		#Instantiate robot and game     
-		robot = Robot.new
-
+		
 		#Initial placement of robot on the board
 		loop do
 			inputString = gets.chomp
-			if is_valid_placement(inputString)
+			if inputString == "QUIT"
+				return
+			elsif is_valid_placement(inputString)
 				inputArray = get_input_array(inputString)
-				robot.place(inputArray[1].to_i, inputArray[2].to_i, inputArray[3])
-				robot.report
+				@robot.place(inputArray[1].to_i, inputArray[2].to_i, inputArray[3])
 				break
 			end
 		end
@@ -46,15 +48,17 @@ class Game
 
 				case command
 				when "MOVE"
-					robot.move
+					@robot.move
 				when "LEFT"
-					robot.left
+					@robot.left
 				when "RIGHT"
-					robot.right
+					@robot.right
 				when "REPORT"
-					robot.report
+					@robot.report
 				when "PLACE"
-					robot.place(inputArray[1].to_i, inputArray[2].to_i, inputArray[3])
+					@robot.place(inputArray[1].to_i, inputArray[2].to_i, inputArray[3])
+				when "QUIT"
+					return
 				end
 			end
 		end
@@ -67,7 +71,7 @@ class Game
 		if !(len == 1 or len == 4)
 			puts @errortext["invalid_command"]
 			return false
-		elsif len == 1 and @commands[1..4].include?(inputArray[0])
+		elsif len == 1 and @commands[1..5].include?(inputArray[0])
 			return true
 		elsif len == 4 and @commands[0] == inputArray[0]
 			return is_valid_placement(inputString)
