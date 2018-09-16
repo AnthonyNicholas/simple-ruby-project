@@ -37,11 +37,24 @@ def main
 
         #Allow the robot to move in response to stdin commands
         loop do
-                #read input
                 inputString = gets.chomp
 		if is_valid_input(inputString, game)
                         inputArray = get_input_array(inputString)
-                        puts "Valid input - let's go"
+			
+			command = inputArray[0]
+			
+			case command
+			when "MOVE"
+				robot.move
+			when "LEFT"
+				robot.left
+			when "RIGHT"
+				robot.right
+			when "REPORT"
+				robot.report
+			when "PLACE"
+				robot.place(inputArray[1].to_i, inputArray[2].to_i, inputArray[3])
+			end
                 end
         end
 end
@@ -104,6 +117,10 @@ class Robot
         attr_accessor :facing, :onBoard
         attr_reader :xPosition, :yPosition
 
+       	def initialize()
+                @directions = {"NORTH" => 0, "EAST" => 1, "SOUTH" => 2, "WEST" => 3}
+        end
+
 	#Set xPosition: setter guards against any move that would take the robot off the board
  	def xPosition=(x)
                 if x > 4
@@ -128,27 +145,42 @@ class Robot
         end
 
 	#Place method: Puts the toy robot on the table in position X,Y and facing NORTH, SOUTH, EAST or WEST. 
-        def place(x,y,facing)
+        def place(x,y,f)
                 self.xPosition = x
                 self.yPosition = y
-                self.facing = facing
+                puts f
+		@facing = f
         end
 
-#METHOD: MOVE will move the toy robot one unit forward in the direction it is currently facing. LEFT and RIGHT will rotate the robot 90 degrees in the specified direction without changing the position of the robot. REPORT will announce the X,Y and F of the robot. This can be in any form, but standard output is sufficient.A robot that is not on the table can choose the ignore the MOVE, LEFT, RIGHT and REPORT commands.
+	#Move Method: moves the toy robot one unit forward in the direction it is currently facing.
 	def move
-		#TODO
+              	case @facing
+                when "NORTH"
+                        self.yPosition += 1
+                when "EAST"
+                        self.xPosition += 1
+                when "SOUTH"
+                        self.yPosition -= 1
+                when "WEST"
+                        self.xPosition -= 1
+                end
 	end
 
-#METHOD: LEFT and RIGHT will rotate the robot 90 degrees in the specified direction without changing the position of the robot.
+	#Left Method:  rotates the robot 90 degrees to the left without changing the position of the robot.
 	def left
-		#TODO
+                dir_code = @directions[@facing]
+                new_dir_code = (dir_code - 1) % 4
+                @facing = @directions.key(new_dir_code)	
 	end
 
+	#Right Method:  rotates the robot 90 degrees to the right without changing the position of the robot.
 	def right
-		#TODO
+                dir_code = @directions[@facing]
+                new_dir_code = (dir_code + 1) % 4
+                @facing = @directions.key(new_dir_code)
 	end
 
-#METHOD: REPORT will announce the X,Y and F of the robot. This can be in any form, but standard output is sufficient.
+	#Report Method announces the X,Y and F of the robot.
 	def report
 		puts "Robot is placed on board at position x:#{@xPosition}, y:#{@yPosition} and facing #{@facing}"
 	end
